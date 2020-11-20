@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class='text-center mb-4'>
+    <h3>Creare your aricle here</h3>
+</div>
+
+<div class='form-group align-center'>
+    <form method='POST' id='article-create-form' action='/create'> {% csrf_token %}
+        <div id='error-div' class='d-none alert alert-danger'></div>
+        <input class='mb-4' type='text' placeholder="Article title" style='width: 40%; height: 50%; border-color: black;' name='title'>
+        <textarea class='form-control mb-4 justify-content-center' rows='4' style='width: 90%; border-color: black;' placeholder='Your article here' name='content'></textarea>
+        <input class='mb-4' type='text' placeholder="Publisher name" style='width: 40%; height: 50%; border-color: black;' name='publisher'>
+        <button type="submit" class='btn btn-primary'>Submit article</button>
+    </form>
+</div>
+<script>
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const handleArticleCreateError = (msg, display) => {
+    const errDiv = document.getElementById('error-div')
+    if (display){
+        errDiv.setAttribute('class', 'd-block alert alert-danger')
+        errDiv.innerHTML = 'Article succesfully uploaded'
+    } else {
+        //hide the error
+        errDiv.setAttribute('class', 'd-none alert alert-danger')
+    }
+}
+
+const handleFormDidSubmit = event => {
+    event.preventDefault()
+    console.log(event.target)
+    const myForm = event.target
+    const myFormData = new FormData(myForm)
+    console.log(myFormData)
+    console.log(myForm.action)
+    const responseType = 'json'
+    const endpoint = myForm.action
+    const method = 'POST'
+    const csrftoken = getCookie('csrftoken')
+    const xhr = new XMLHttpRequest()
+    xhr.responseType = responseType
+    xhr.open(method, endpoint)
+    xhr.setRequestHeader("HTTP_X_REQUESTED_WITH", "XMLHttpRequest")
+    xhr.setRequestHeader("X-Requested-With","XMLHttpRequest")
+    xhr.setRequestHeader("X-CSRFToken", csrftoken)
+    xhr.onload = () => {
+        
+
+        if (xhr.status === 201) {
+            handleArticleCreateError('', false)
+        } 
+        else if (xhr.status === 500){
+            alert('There was a server error. Please try again later')
+        }
+        myForm.reset()
+    }
+    xhr.onerror = e => {
+        console.log(e)
+    }
+    xhr.send(myFormData)
+}
+
+
+
+
+const artileCreateForm = document.getElementById('article-create-form')
+artileCreateForm.addEventListener('submit', handleFormDidSubmit)
+
+
+</script>
+{% endblock %}  
