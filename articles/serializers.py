@@ -24,3 +24,25 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
         if len(value) > MAX_TITLE_LENGTH:
             raise serializers.ValidationError('The publisher name is too long')
         return value
+
+class ArticleSerializer(serializers.ModelSerializer):
+    title = serializers.SerializerMethodField(read_only=True)
+    content = serializers.SerializerMethodField(read_only=True)
+    publisher = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = Article
+        fields = [
+            'title',
+            'content',
+            'publisher'
+        ]
+
+    def get_title(self, obj):
+        return obj.title
+
+    def get_content(self, obj):
+        return obj.content
+
+    def get_publisher(self, obj):
+        return obj.publisher

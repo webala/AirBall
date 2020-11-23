@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class='text-center mb-5'>
+    <h1>AirBall Sports
+        <small class='text-muted'>A sports Blog</small>
+    </h1> 
+</div>
+
+<p><em>Top Story.....</em></p>
+
+<div id='latest_article' class='text-center'>
+    <h3 id='latest_article_title'><u></u></h3>
+    <p id='latest_article_content'></p>
+    <h4 id=latest_article_publisher><small class='text-muted'>Published by </small></h4>
+</div>
+
+<div id='articles'>
+
+</div>
+
+<script>
+    //LA stands for Latest Article
+    const LAdiv = document.getElementById('latest_article')
+    const LAtitle = document.getElementById('latest_article_title')
+    const LAcontent = document.getElementById('latest_article_content')
+    const LApublisher = document.getElementById('latest_article_publisher')
+
+    const formatArticle = (article) => {
+        return "<div>" + article.title + "</div><p>" + article.content + "</p><h4><small class='text-muted'>"
+    }
+
+
+    const loadArticles = () => {
+        const method = 'GET'
+        const url = '/article_list'
+        const xhr = new XMLHttpRequest()
+        xhr.open(method, url)
+        xhr.responseType = 'json'
+        xhr.onload = () => {
+            console.log(xhr.response, xhr.status)
+            if (xhr.status === 200){
+                const response = xhr.response
+                LAtitle.innerHTML = response[0].title
+                LAcontent.innerHTML = response[0].content
+                LApublisher.innerHTML += response[0].publisher
+            }
+        }
+        xhr.send()
+    }
+    loadArticles()
+</script>
+
+{% endblock %}
