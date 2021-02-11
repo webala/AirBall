@@ -25,9 +25,9 @@ MAX_NAME_LENGTH = 100
 SECRET_KEY = '5pf3d0+pdeuv6--0yoc9h8z)&8m(l!e5z-72(@p4vli$$)^p&_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['airballsports.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -81,8 +81,12 @@ WSGI_APPLICATION = 'AirBall.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'DEMO_TEST',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 
